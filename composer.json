@@ -1,0 +1,64 @@
+{
+    "name": "zentiq-labs/laravel-fast-pdf",
+    "description": "Official Laravel bridge for zentiq-labs/fast-pdf — Blade view rendering, Facade access, and Laravel HTTP response helpers.",
+    "keywords": ["laravel", "pdf", "chromium", "blade", "pdf-generation", "fast-pdf"],
+    "license": "MIT",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Usman Khan",
+            "email": "usman@zentiqlabs.com",
+            "homepage": "https://zentiqlabs.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^8.3",
+        "zentiq-labs/fast-pdf": "^1.0",
+        "illuminate/support": "^11.0|^12.0",
+        "illuminate/view": "^11.0|^12.0"
+    },
+    "require-dev": {
+        "mockery/mockery": "^1.6",
+        "pestphp/pest": "^3.0",
+        "phpunit/phpunit": "^11.0",
+        "orchestra/testbench": "^9.0",
+        "phpstan/phpstan": "^2.0",
+        "squizlabs/php_codesniffer": "^3.10"
+    },
+    "autoload": {
+        "psr-4": {
+            "ZentiqLabs\\FastPdf\\Laravel\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "ZentiqLabs\\FastPdf\\Laravel\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ZentiqLabs\\FastPdf\\Laravel\\FastPdfServiceProvider"
+            ],
+            "aliases": {
+                "FastPdf": "ZentiqLabs\\FastPdf\\Laravel\\Facades\\FastPdf"
+            }
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/pest",
+        "test:coverage": "vendor/bin/pest --coverage",
+        "check": "vendor/bin/phpstan analyse",
+        "cs": "vendor/bin/phpcs",
+        "cs:fix": "vendor/bin/phpcbf"
+    },
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

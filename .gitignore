@@ -1,0 +1,11 @@
+/vendor/
+/.phpunit.cache/
+/.pest/
+/output.pdf
+*.pdf
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
+composer.lock
