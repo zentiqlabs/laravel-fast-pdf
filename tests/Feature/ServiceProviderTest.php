@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use Illuminate\Support\ServiceProvider;
 use ZentiqLabs\FastPdf\Laravel\FastPdfManager;
 use ZentiqLabs\FastPdf\Laravel\Facades\FastPdf;
 

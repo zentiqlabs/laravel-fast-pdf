@@ -5,19 +5,19 @@ declare(strict_types=1);
 namespace ZentiqLabs\FastPdf\Laravel;
 
 use Illuminate\Http\Response;
-use ZentiqLabs\FastPdf\Enums\PaperOrientation;
 use ZentiqLabs\FastPdf\Enums\PaperSize;
-use ZentiqLabs\FastPdf\PdfBuilder;
+use ZentiqLabs\FastPdf\Laravel\Contracts\PdfBuilderContract;
 
 /**
- * Decorates the core PdfBuilder with Laravel HTTP response helpers.
+ * Wraps a PdfBuilderContract with Laravel HTTP response helpers.
  *
- * All fluent methods delegate to the wrapped builder and return $this so
- * chains work identically to the framework-agnostic API.
+ * All fluent methods delegate to the underlying builder and return $this so
+ * chains work identically to the framework-agnostic API. The concrete
+ * implementation passed at construction is CorePdfBuilderAdapter.
  */
 class LaravelPdfBuilder
 {
-    public function __construct(private readonly PdfBuilder $builder)
+    public function __construct(private readonly PdfBuilderContract $builder)
     {
     }
 

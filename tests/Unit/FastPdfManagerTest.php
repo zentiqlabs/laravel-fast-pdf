@@ -19,20 +19,22 @@ class FastPdfManagerTest extends TestCase
         parent::tearDown();
     }
 
+    private function makeManager(?ViewFactory $factory = null): FastPdfManager
+    {
+        return new FastPdfManager(
+            $factory ?? Mockery::mock(ViewFactory::class),
+            ['binary' => '/usr/bin/chromium'],
+        );
+    }
+
     public function test_builder_returns_laravel_pdf_builder(): void
     {
-        $factory = Mockery::mock(ViewFactory::class);
-        $manager = new FastPdfManager($factory);
-
-        $this->assertInstanceOf(LaravelPdfBuilder::class, $manager->builder());
+        $this->assertInstanceOf(LaravelPdfBuilder::class, $this->makeManager()->builder());
     }
 
     public function test_from_html_returns_laravel_pdf_builder(): void
     {
-        $factory = Mockery::mock(ViewFactory::class);
-        $manager = new FastPdfManager($factory);
-
-        $result = $manager->fromHtml('<p>Hello</p>');
+        $result = $this->makeManager()->fromHtml('<p>Hello</p>');
 
         $this->assertInstanceOf(LaravelPdfBuilder::class, $result);
     }
@@ -45,7 +47,7 @@ class FastPdfManagerTest extends TestCase
         $factory = Mockery::mock(ViewFactory::class);
         $factory->shouldReceive('make')->once()->with('invoices.pdf', ['number' => 1])->andReturn($view);
 
-        $manager = new FastPdfManager($factory);
+        $manager = $this->makeManager($factory);
         $result  = $manager->fromView('invoices.pdf', ['number' => 1]);
 
         $this->assertInstanceOf(LaravelPdfBuilder::class, $result);

@@ -23,6 +23,7 @@ abstract class TestCase extends OrchestraTestCase
 
     protected function defineEnvironment($app): void
     {
+        $app['config']->set('fast-pdf.binary', '/usr/bin/chromium');
         $app['config']->set('fast-pdf.containerized', (bool) env('FAST_PDF_CONTAINERIZED', false));
         $app['config']->set('fast-pdf.timeout', 30);
     }

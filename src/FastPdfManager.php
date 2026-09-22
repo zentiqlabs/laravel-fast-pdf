@@ -54,6 +54,6 @@ class FastPdfManager
      */
     public function builder(): LaravelPdfBuilder
     {
-        return new LaravelPdfBuilder($this->pdf->builder());
+        return new LaravelPdfBuilder(new CorePdfBuilderAdapter($this->pdf->builder()));
     }
 }

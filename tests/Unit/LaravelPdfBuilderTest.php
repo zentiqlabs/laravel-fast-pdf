@@ -6,26 +6,28 @@ namespace ZentiqLabs\FastPdf\Laravel\Tests\Unit;
 
 use Illuminate\Http\Response;
 use Mockery;
+use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use ZentiqLabs\FastPdf\Enums\PaperSize;
+use ZentiqLabs\FastPdf\Laravel\Contracts\PdfBuilderContract;
 use ZentiqLabs\FastPdf\Laravel\LaravelPdfBuilder;
-use ZentiqLabs\FastPdf\PdfBuilder;
 
 class LaravelPdfBuilderTest extends TestCase
 {
-    protected function tearDown(): void
+    use MockeryPHPUnitIntegration;
+
+    private function makeContract(): PdfBuilderContract
     {
-        Mockery::close();
-        parent::tearDown();
+        return Mockery::mock(PdfBuilderContract::class);
     }
 
     public function test_download_returns_laravel_response(): void
     {
-        $core = Mockery::mock(PdfBuilder::class);
-        $core->shouldReceive('fromHtml')->once()->andReturnSelf();
-        $core->shouldReceive('output')->once()->andReturn('%PDF-1.4 fake');
+        $contract = $this->makeContract();
+        $contract->shouldReceive('fromHtml')->once()->andReturnSelf();
+        $contract->shouldReceive('output')->once()->andReturn('%PDF-1.4 fake');
 
-        $builder  = new LaravelPdfBuilder($core);
+        $builder  = new LaravelPdfBuilder($contract);
         $response = $builder->fromHtml('<h1>Test</h1>')->download('test.pdf');
 
         $this->assertInstanceOf(Response::class, $response);
@@ -37,11 +39,11 @@ class LaravelPdfBuilderTest extends TestCase
 
     public function test_inline_returns_laravel_response_with_inline_disposition(): void
     {
-        $core = Mockery::mock(PdfBuilder::class);
-        $core->shouldReceive('fromHtml')->once()->andReturnSelf();
-        $core->shouldReceive('output')->once()->andReturn('%PDF-1.4 fake');
+        $contract = $this->makeContract();
+        $contract->shouldReceive('fromHtml')->once()->andReturnSelf();
+        $contract->shouldReceive('output')->once()->andReturn('%PDF-1.4 fake');
 
-        $builder  = new LaravelPdfBuilder($core);
+        $builder  = new LaravelPdfBuilder($contract);
         $response = $builder->fromHtml('<h1>Test</h1>')->inline('report.pdf');
 
         $this->assertInstanceOf(Response::class, $response);
@@ -50,12 +52,12 @@ class LaravelPdfBuilderTest extends TestCase
 
     public function test_fluent_methods_return_static(): void
     {
-        $core = Mockery::mock(PdfBuilder::class);
-        $core->shouldReceive('paperSize')->once()->andReturnSelf();
-        $core->shouldReceive('landscape')->once()->andReturnSelf();
-        $core->shouldReceive('withTailwind')->once()->andReturnSelf();
+        $contract = $this->makeContract();
+        $contract->shouldReceive('paperSize')->once()->andReturnSelf();
+        $contract->shouldReceive('landscape')->once()->andReturnSelf();
+        $contract->shouldReceive('withTailwind')->once()->andReturnSelf();
 
-        $builder = new LaravelPdfBuilder($core);
+        $builder = new LaravelPdfBuilder($contract);
 
         $result = $builder
             ->paperSize(PaperSize::A4)
@@ -65,36 +67,35 @@ class LaravelPdfBuilderTest extends TestCase
         $this->assertSame($builder, $result);
     }
 
-    public function test_output_delegates_to_core(): void
+    public function test_output_delegates_to_contract(): void
     {
-        $core = Mockery::mock(PdfBuilder::class);
-        $core->shouldReceive('output')->once()->andReturn('binary-pdf-data');
+        $contract = $this->makeContract();
+        $contract->shouldReceive('output')->once()->andReturn('binary-pdf-data');
 
-        $builder = new LaravelPdfBuilder($core);
+        $builder = new LaravelPdfBuilder($contract);
 
         $this->assertSame('binary-pdf-data', $builder->output());
     }
 
-    public function test_save_delegates_to_core(): void
+    public function test_save_delegates_to_contract(): void
     {
-        $core = Mockery::mock(PdfBuilder::class);
-        $core->shouldReceive('save')->once()->with('/tmp/out.pdf');
+        $contract = $this->makeContract();
+        $contract->shouldReceive('save')->once()->with('/tmp/out.pdf');
 
-        $builder = new LaravelPdfBuilder($core);
+        $builder = new LaravelPdfBuilder($contract);
         $builder->save('/tmp/out.pdf');
 
-        // No exception = pass
         $this->assertTrue(true);
     }
 
     public function test_content_length_header_matches_pdf_byte_size(): void
     {
         $pdfBytes = str_repeat('x', 1024);
-        $core     = Mockery::mock(PdfBuilder::class);
-        $core->shouldReceive('fromHtml')->once()->andReturnSelf();
-        $core->shouldReceive('output')->once()->andReturn($pdfBytes);
+        $contract = $this->makeContract();
+        $contract->shouldReceive('fromHtml')->once()->andReturnSelf();
+        $contract->shouldReceive('output')->once()->andReturn($pdfBytes);
 
-        $builder  = new LaravelPdfBuilder($core);
+        $builder  = new LaravelPdfBuilder($contract);
         $response = $builder->fromHtml('<p>hi</p>')->download();
 
         $this->assertSame('1024', $response->headers->get('Content-Length'));
