@@ -14,7 +14,7 @@
 | Requirement | Version |
 |---|---|
 | PHP | `^8.3` |
-| Laravel | `^11.0` or `^12.0` |
+| Laravel | `^12.0` |
 | zentiq-labs/fast-pdf | `^1.0` |
 | Chromium / Google Chrome | Any headless-capable build |
 
