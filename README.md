@@ -5,7 +5,7 @@ Official Laravel bridge for [zentiq-labs/fast-pdf](https://github.com/zentiqlabs
 [![Tests](https://github.com/zentiqlabs/laravel-fast-pdf/actions/workflows/tests.yml/badge.svg)](https://github.com/zentiqlabs/laravel-fast-pdf/actions)
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/zentiq-labs/laravel-fast-pdf.svg?style=flat-square)](https://packagist.org/packages/zentiq-labs/laravel-fast-pdf)
 [![Total Downloads](https://img.shields.io/packagist/dt/zentiq-labs/laravel-fast-pdf.svg?style=flat-square)](https://packagist.org/packages/zentiq-labs/laravel-fast-pdf)
-[![License](https://img.shields.io/github/license/zentiqlabs/laravel-fast-pdf.svg?style=flat-square)](LICENSE)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 
 ## Requirements
 
