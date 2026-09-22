@@ -1,13 +1,11 @@
 # Laravel Fast PDF
 
-> Official Laravel bridge for [zentiq-labs/fast-pdf](https://github.com/zentiqlabs/fast-pdf) — Blade view rendering, Facade access, and native Laravel HTTP response helpers. Powered by direct headless Chromium IPC. **Zero Node.js. Zero Puppeteer.**
+Official Laravel bridge for [zentiq-labs/fast-pdf](https://github.com/zentiqlabs/fast-pdf). Adds Blade view rendering, Facade access, and native Laravel HTTP response helpers. Powered by direct headless Chromium IPC. **Zero Node.js. Zero Puppeteer.**
 
 [![Tests](https://github.com/zentiqlabs/laravel-fast-pdf/actions/workflows/tests.yml/badge.svg)](https://github.com/zentiqlabs/laravel-fast-pdf/actions)
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/zentiq-labs/laravel-fast-pdf.svg?style=flat-square)](https://packagist.org/packages/zentiq-labs/laravel-fast-pdf)
 [![Total Downloads](https://img.shields.io/packagist/dt/zentiq-labs/laravel-fast-pdf.svg?style=flat-square)](https://packagist.org/packages/zentiq-labs/laravel-fast-pdf)
 [![License](https://img.shields.io/github/license/zentiqlabs/laravel-fast-pdf.svg?style=flat-square)](LICENSE)
-
----
 
 ## Requirements
 
@@ -17,8 +15,6 @@
 | Laravel | `^12.0` |
 | zentiq-labs/fast-pdf | `^1.0` |
 | Chromium / Google Chrome | Any headless-capable build |
-
----
 
 ## Installation
 
@@ -35,8 +31,6 @@ php artisan vendor:publish --tag=fast-pdf-config
 ```
 
 This copies `config/fast-pdf.php` into your application's config directory.
-
----
 
 ## Quick Start
 
@@ -74,8 +68,6 @@ class InvoiceController extends Controller
 }
 ```
 
----
-
 ## Configuration
 
 After publishing, edit `config/fast-pdf.php`. Key options:
@@ -100,8 +92,6 @@ After publishing, edit `config/fast-pdf.php`. Key options:
 | `FAST_PDF_CONTAINERIZED` | `true` when running in Docker |
 | `FAST_PDF_ALLOW_LOCAL_FILE_ACCESS` | `true` to enable local file reads |
 
----
-
 ## Fluent Builder API
 
 `FastPdfManager` returns a `LaravelPdfBuilder`. All methods are chainable.
@@ -121,8 +111,6 @@ After publishing, edit `config/fast-pdf.php`. Key options:
 | `save(string $path): void` | Write to a file path |
 | `download(string $filename = 'document.pdf'): Response` | Browser download response |
 | `inline(string $filename = 'document.pdf'): Response` | Inline browser response |
-
----
 
 ## Blade Template Example
 
@@ -147,9 +135,7 @@ return FastPdf::fromView('pdf.invoice', ['invoice' => $invoice])
     ->download("invoice-{$invoice->number}.pdf");
 ```
 
----
-
-## Docker & Alpine Linux
+## Docker and Alpine Linux
 
 ```dockerfile
 FROM php:8.3-fpm-alpine
@@ -163,8 +149,6 @@ In `config/fast-pdf.php` or `.env`:
 ```ini
 FAST_PDF_CONTAINERIZED=true
 ```
-
----
 
 ## Testing
 
@@ -190,8 +174,6 @@ Code style (PSR-12):
 composer cs
 ```
 
----
-
 ## Contributing
 
 Contributions, issues, and feature requests are welcome. Please ensure any pull request:
@@ -201,12 +183,8 @@ Contributions, issues, and feature requests are welcome. Please ensure any pull 
 3. Passes the full CI pipeline (`test`, `check`, `cs`) locally before opening a PR.
 4. Follows [Conventional Commits](https://www.conventionalcommits.org/).
 
----
-
 ## License
 
 The MIT License (MIT). See [LICENSE](LICENSE) for details.
 
----
-
-*Developed and maintained by [Usman Khan](https://github.com/usman-khan) at [Zentiq Labs](https://zentiqlabs.com).*
+Developed and maintained by [Usman Khan](https://github.com/usman-khan) at [Zentiq Labs](https://zentiqlabs.com).
