@@ -12,3 +12,15 @@ If you discover a security vulnerability within this package, please send an ema
 2. Install dependencies via Composer:
    ```bash
    composer install
+   ```
+3. Run test suites before submitting PRs:
+   ```bash
+   vendor/bin/pest
+   ```
+
+## Pull Request Process
+
+1. Create a new feature branch (`git checkout -b feature/my-feature`).
+2. Ensure code follows PSR-12 coding standards.
+3. Write or update tests for your changes.
+4. Open a Pull Request against the `main` branch with a clear description of the changes.
