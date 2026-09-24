@@ -104,6 +104,7 @@ After publishing, edit `config/fast-pdf.php`. Key options:
 | `fromView(string $view, array $data = [])` | Render a Blade view as the PDF source |
 | `fromHtml(string $html)` | Use a raw HTML string as the source |
 | `fromFile(string $path, array $data = [])` | Render a PHP template file as the source |
+| `paper(string $format = 'a4', string $orientation = 'portrait')` | Set paper format and orientation in one call |
 | `paperSize(PaperSize\|string $size)` | Set paper size |
 | `landscape()` | Landscape orientation |
 | `portrait()` | Portrait orientation |
@@ -112,8 +113,103 @@ After publishing, edit `config/fast-pdf.php`. Key options:
 | `emulateMedia(string $media = 'print')` | CSS media type |
 | `output(): string` | Return raw binary PDF bytes |
 | `save(string $path): void` | Write to a file path |
-| `download(string $filename = 'document.pdf'): Response` | Browser download response |
-| `inline(string $filename = 'document.pdf'): Response` | Inline browser response |
+| `download(?string $filename = null): Response` | Browser download response |
+| `inline(?string $filename = null): Response` | Inline browser response |
+
+## Page Setup
+
+Use `paper()` to set format and orientation together, or chain `paperSize()` + `landscape()` separately.
+
+```php
+// Shorthand
+FastPdf::fromView('pdf.report', $data)
+    ->paper('letter', 'landscape')
+    ->margins(15, 15, 15, 15)
+    ->download('report.pdf');
+
+// Longhand
+FastPdf::fromHtml($html)
+    ->paperSize('a4')
+    ->portrait()
+    ->download();
+```
+
+Supported formats: `a0` `a1` `a2` `a3` `a4` `a5` `a6` `letter` `legal` `tabloid` `ledger`.
+
+## Controller Response Helpers
+
+`download()` and `inline()` return an `Illuminate\Http\Response` — no `exit()` is called, so the response goes through Laravel's middleware stack as normal.
+
+```php
+use ZentiqLabs\FastPdf\Laravel\Facades\FastPdf;
+
+class InvoiceController extends Controller
+{
+    public function download(Invoice $invoice): Response
+    {
+        return FastPdf::fromView('pdf.invoice', compact('invoice'))
+            ->paper('a4')
+            ->withTailwind()
+            ->download("invoice-{$invoice->number}.pdf");
+    }
+
+    public function preview(Invoice $invoice): Response
+    {
+        return FastPdf::fromView('pdf.invoice', compact('invoice'))
+            ->inline("invoice-{$invoice->number}.pdf");
+    }
+}
+```
+
+Both methods default the filename to `document.pdf` when called without arguments.
+
+## Testing with FastPdf::fake()
+
+Call `FastPdf::fake()` in your test to prevent Chromium from spawning. The facade is swapped with an in-memory fake that records every call.
+
+```php
+use ZentiqLabs\FastPdf\Laravel\Facades\FastPdf;
+
+it('generates and downloads an invoice PDF', function (): void {
+    FastPdf::fake();
+
+    $invoice = Invoice::factory()->create();
+
+    $response = $this->get(route('invoices.download', $invoice));
+
+    $response->assertOk()
+             ->assertHeader('Content-Type', 'application/pdf');
+
+    FastPdf::assertRendered('pdf.invoice');
+});
+```
+
+### Available assertions
+
+```php
+// Assert a Blade view was rendered (optionally inspect the data passed to it)
+FastPdf::assertRendered('pdf.invoice');
+FastPdf::assertRendered('pdf.invoice', function (array $data): void {
+    expect($data['invoice']->id)->toBe(42);
+});
+
+// Assert no renders occurred at all
+FastPdf::assertNothingRendered();
+
+// Assert save() was called with a specific path
+FastPdf::assertSaved('/var/invoices/001.pdf');
+```
+
+## Modern CSS & Asset Support (vs. mPDF / TCPDF)
+
+Legacy PHP PDF generators rely on outdated internal parsing engines that silently omit broken images, crash on modern image formats, or require server-level file permission workarounds.
+
+`laravel-fast-pdf` uses native headless Chromium IPC under the hood, giving you complete feature parity with modern web browsers:
+
+- **Zero Silent Image Failures:** Renders all standard browser assets natively — including remote URLs (`https://...`), relative paths, and Base64 data URIs (`data:image/png;base64,...`).
+- **Modern Media Formats:** Built-in support for WebP, AVIF, PNG with alpha transparency, JPEGs, and dynamic inline SVGs.
+- **Full CSS3 Layout Capabilities:** Native support for CSS Flexbox, CSS Grid, `object-fit`, `border-radius`, custom web fonts, and dynamic background images.
+- **No Server Hacks Required:** Works out of the box without enabling risky `isRemoteEnabled` flags, compiling extra GD/Imagick extensions, or setting raw file path overrides.
 
 ## Blade Template Example
 

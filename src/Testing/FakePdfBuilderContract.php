@@ -2,62 +2,52 @@
 
 declare(strict_types=1);
 
-namespace ZentiqLabs\FastPdf\Laravel;
+namespace ZentiqLabs\FastPdf\Laravel\Testing;
 
 use ZentiqLabs\FastPdf\Enums\PaperSize;
 use ZentiqLabs\FastPdf\Laravel\Contracts\PdfBuilderContract;
-use ZentiqLabs\FastPdf\PdfBuilder;
 
 /**
- * Adapts the framework-agnostic (final) PdfBuilder to PdfBuilderContract
- * so LaravelPdfBuilder can be fully tested without mocking a final class.
+ * In-process fake that satisfies PdfBuilderContract for unit/feature tests.
+ *
+ * All fluent methods are no-ops that return $this. output() returns a
+ * predictable fake PDF string. save() records the path via the callback
+ * supplied by FastPdfManagerFake so assertions can verify it was called.
  */
-class CorePdfBuilderAdapter implements PdfBuilderContract
+final class FakePdfBuilderContract implements PdfBuilderContract
 {
-    public function __construct(private readonly PdfBuilder $builder)
+    public function __construct(private readonly \Closure $onSave)
     {
     }
 
     public function fromHtml(string $html): static
     {
-        $this->builder->fromHtml($html);
-
         return $this;
     }
 
     /** @param array<string, mixed> $data */
     public function fromFile(string $filePath, array $data = []): static
     {
-        $this->builder->fromFile($filePath, $data);
-
         return $this;
     }
 
     public function paper(string $format = 'a4', string $orientation = 'portrait'): static
     {
-        $this->builder->paper($format, $orientation);
-
         return $this;
     }
 
     public function paperSize(PaperSize|string $size): static
     {
-        $this->builder->paperSize($size);
-
         return $this;
     }
 
     public function landscape(): static
     {
-        $this->builder->landscape();
-
         return $this;
     }
 
     public function portrait(): static
     {
-        $this->builder->portrait();
-
         return $this;
     }
 
@@ -68,32 +58,26 @@ class CorePdfBuilderAdapter implements PdfBuilderContract
         float $left,
         string $unit = 'mm',
     ): static {
-        $this->builder->margins($top, $right, $bottom, $left, $unit);
-
         return $this;
     }
 
     public function withTailwind(): static
     {
-        $this->builder->withTailwind();
-
         return $this;
     }
 
     public function emulateMedia(string $media = 'print'): static
     {
-        $this->builder->emulateMedia($media);
-
         return $this;
     }
 
     public function output(): string
     {
-        return $this->builder->output();
+        return '%PDF-1.4 fake';
     }
 
     public function save(string $path): void
     {
-        $this->builder->save($path);
+        ($this->onSave)($path);
     }
 }

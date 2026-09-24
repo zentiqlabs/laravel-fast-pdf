@@ -21,6 +21,8 @@ interface PdfBuilderContract
     /** @param array<string, mixed> $data */
     public function fromFile(string $filePath, array $data = []): static;
 
+    public function paper(string $format = 'a4', string $orientation = 'portrait'): static;
+
     public function paperSize(PaperSize|string $size): static;
 
     public function landscape(): static;

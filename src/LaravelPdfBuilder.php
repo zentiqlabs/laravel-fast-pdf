@@ -38,6 +38,13 @@ class LaravelPdfBuilder
         return $this;
     }
 
+    public function paper(string $format = 'a4', string $orientation = 'portrait'): static
+    {
+        $this->builder->paper($format, $orientation);
+
+        return $this;
+    }
+
     public function paperSize(PaperSize|string $size): static
     {
         $this->builder->paperSize($size);
@@ -104,17 +111,17 @@ class LaravelPdfBuilder
     /**
      * Return a Laravel HTTP response that triggers a browser file download.
      */
-    public function download(string $filename = 'document.pdf'): Response
+    public function download(?string $filename = null): Response
     {
-        return $this->buildResponse('attachment', $filename);
+        return $this->buildResponse('attachment', $filename ?? 'document.pdf');
     }
 
     /**
      * Return a Laravel HTTP response that renders the PDF inline in the browser.
      */
-    public function inline(string $filename = 'document.pdf'): Response
+    public function inline(?string $filename = null): Response
     {
-        return $this->buildResponse('inline', $filename);
+        return $this->buildResponse('inline', $filename ?? 'document.pdf');
     }
 
     private function buildResponse(string $disposition, string $filename): Response
