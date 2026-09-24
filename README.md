@@ -1,6 +1,9 @@
 # Laravel Fast PDF
 
-Official Laravel bridge for [zentiq-labs/fast-pdf](https://github.com/zentiqlabs/fast-pdf). Adds Blade view rendering, Facade access, and native Laravel HTTP response helpers. Powered by direct headless Chromium IPC. **Zero Node.js. Zero Puppeteer.**
+> Official Laravel bridge for [zentiq-labs/fast-pdf](https://github.com/zentiqlabs/fast-pdf). Adds Blade view rendering, Facade access, and native Laravel HTTP response helpers. Powered by direct headless Chromium IPC. **Zero Node.js. Zero Puppeteer.**
+
+> **Official Package:** Maintained by [Zentiq Labs](https://github.com/zentiqlabs).  
+> For security disclosures and support, visit [zentiqlabs.com](https://zentiqlabs.com).
 
 [![Tests](https://github.com/zentiqlabs/laravel-fast-pdf/actions/workflows/tests.yml/badge.svg)](https://github.com/zentiqlabs/laravel-fast-pdf/actions)
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/zentiq-labs/laravel-fast-pdf.svg?style=flat-square)](https://packagist.org/packages/zentiq-labs/laravel-fast-pdf)
